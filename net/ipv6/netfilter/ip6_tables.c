@@ -392,7 +392,9 @@ ip6t_do_table(struct sk_buff *skb,
 		ADD_COUNTER(e->counters, skb->len, 1);
 
 		t = ip6t_get_target_c(e);
+
 		IP_NF_ASSERT(t->u.kernel.target);
+
 
 #if defined(CONFIG_NETFILTER_XT_TARGET_TRACE) || \
     defined(CONFIG_NETFILTER_XT_TARGET_TRACE_MODULE)
@@ -400,6 +402,14 @@ ip6t_do_table(struct sk_buff *skb,
 		if (unlikely(skb->nf_trace))
 			trace_packet(skb, hook, in, out,
 				     table->name, private, e);
+#endif
+
+#ifdef CONFIG_HTC_NETWORK_MODIFY
+		if((!t->u.kernel.target) || IS_ERR(t->u.kernel.target)) {
+			pr_info("[NET][IPV6]%s: WARN:u.kernel.target is NULL\n",__func__);
+			//return verdict;
+			break;
+		}
 #endif
 		/* Standard target? */
 		if (!t->u.kernel.target->target) {
