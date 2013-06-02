@@ -1124,7 +1124,7 @@ static void shooter_3Dpanel_on(bool bLandscape)
 	struct pm8058_pwm_period pwm_conf;
 	int rc;
 
-	led_brightness_switch("lcd-backlight", 255);
+	led_brightness_switch("lcd-backlight", last_br_2d);
 
 	if (system_rev >= 1) {
 		pwm_gpio_config.output_value = 1;
